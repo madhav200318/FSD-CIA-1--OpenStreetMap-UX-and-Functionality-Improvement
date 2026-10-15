@@ -90,4 +90,4 @@ osm-smart-search/
 
 ## Author
 
-Your Name – Register No. – Class/Section
+B Madhav Nair – 2648513 – 2MSAIM
