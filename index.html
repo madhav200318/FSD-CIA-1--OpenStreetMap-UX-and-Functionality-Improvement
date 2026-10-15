@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Location Search · OpenStreetMap UX Challenge</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="antialiased">
+<div id="map" aria-label="Map"></div>
+
+<aside class="panel fixed z-[1100] inset-x-0 top-0 md:bottom-0 md:w-[26rem] flex flex-col max-h-[80vh] md:max-h-none rounded-b-3xl md:rounded-none shadow-2xl">
+ <div class="deco"><div class="blob w-64 h-64 bg-blue-600 -top-24 -left-20"></div><div class="blob w-56 h-56 bg-cyan-500 bottom-10 -right-24" style="animation-delay:-6s"></div><div class="ring w-[26rem] h-[26rem] -bottom-40 -left-40"></div></div>
+ <div class="relative p-4 pb-2">
+  <div class="flex items-center justify-between mb-3">
+   <h1 class="font-display font-extrabold text-lg">◉ GeoFind <span class="text-cyan-300 text-xs font-semibold ml-1">Smart Search</span></h1>
+   <div class="flex gap-2"><button id="openAbout" class="btn2">Case study</button><button id="toggle" class="btn2 md:hidden" aria-label="Toggle panel">▴</button></div>
+  </div>
+  <form id="searchForm" novalidate autocomplete="off" role="search">
+   <label for="q" class="sr-only">Search a place, street or address</label>
+   <div class="flex gap-2">
+    <div class="relative flex-1">
+     <input id="q" type="text" maxlength="200" placeholder="Search place, street or address" role="combobox" aria-expanded="true" aria-controls="sug" aria-describedby="msg"
+      class="w-full bg-blue-950/70 border border-blue-400/30 focus:border-cyan-300 focus:outline-none rounded-xl pl-3 pr-9 py-2.5 placeholder-blue-400 aria-[invalid=true]:border-rose-400">
+     <button type="button" id="clear" aria-label="Clear search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white">✕</button>
+     <ul id="sug" role="listbox" class="hidden absolute z-20 left-0 right-0 mt-2 rounded-xl overflow-hidden border border-blue-400/30 bg-[#06183f] shadow-2xl"></ul>
+    </div>
+    <button id="go" type="submit" class="btn">Go</button>
+   </div>
+   <p id="msg" class="mt-1.5 text-sm min-h-[1.25rem] text-rose-300" aria-live="polite"></p>
+  </form>
+ </div>
+ <div id="body" class="relative flex-1 min-h-0 overflow-y-auto px-4 pb-4">
+  <div id="preview" aria-label="Selected location"></div>
+  <div id="results" aria-live="polite"></div>
+ </div>
+</aside>
+
+<!-- CASE STUDY MODAL -->
+<div id="about" class="hidden fixed inset-0 z-[2000] bg-[#030b1f]/90 backdrop-blur overflow-y-auto">
+ <div class="deco"><div class="blob w-96 h-96 bg-blue-600 -top-20 -left-20"></div><div class="blob w-80 h-80 bg-cyan-500 top-1/2 right-0" style="animation-delay:-5s"></div><div class="ring w-[34rem] h-[34rem] top-20 -right-40"></div></div>
+ <div class="relative max-w-4xl mx-auto px-4 py-8 space-y-5">
+  <div class="flex justify-between items-start gap-3">
+   <div><p class="chip inline-block mb-2">FSD CIA 1 · Part 1 — Problem Definition and Innovation</p>
+   <h2 class="font-display font-extrabold text-2xl sm:text-4xl bg-gradient-to-r from-sky-200 via-blue-400 to-cyan-300 bg-clip-text text-transparent">OpenStreetMap UX and Functionality Improvement Challenge</h2></div>
+   <button id="closeAbout" class="btn2 shrink-0" aria-label="Close">✕ Close</button>
+  </div>
+
+  <section class="glass p-5"><h3 class="font-display font-bold text-xl">Q1 · Benchmark Analysis</h3>
+   <p class="text-blue-300 text-sm mt-1">Target users: <b>Tourists, Travellers, Delivery Workers</b> etc.</p>
+   <h4 class="font-semibold mt-3 mb-2">Selected workflow: Searching for a location</h4>
+   <ol class="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 text-sm">
+    <li class="glass p-3"><b class="text-cyan-300">01</b> <b>Enter a search query</b><br><span class="text-blue-300">The user types a place name, street or address.</span></li>
+    <li class="glass p-3"><b class="text-cyan-300">02</b> <b>View matching results</b><br><span class="text-blue-300">The website displays possible matches for the query.</span></li>
+    <li class="glass p-3"><b class="text-cyan-300">03</b> <b>Identify the correct place</b><br><span class="text-blue-300">The user compares names and available location details.</span></li>
+    <li class="glass p-3"><b class="text-cyan-300">04</b> <b>Select a result</b><br><span class="text-blue-300">The selected location is displayed on the map.</span></li>
+    <li class="glass p-3"><b class="text-cyan-300">05</b> <b>Explore or plan a route</b><br><span class="text-blue-300">The user inspects the area or uses the location as a destination.</span></li>
+   </ol>
+   <p class="text-sm mt-3"><b>Existing features to benchmark:</b> <span class="text-blue-200">The existing OpenStreetMap website provides a location search field, search suggestions/results, map navigation and the ability to inspect a selected location.</span></p></section>
+
+  <div class="grid md:grid-cols-2 gap-5">
+   <section class="glass p-5"><h3 class="font-display font-bold text-xl">Problem Definition</h3>
+    <p class="text-cyan-300 font-semibold mt-1">Improving Location Search Through Autocomplete</p>
+    <p class="text-blue-200 text-sm mt-2">Users may experience difficulties identifying the correct location when searching for places with similar names or multiple possible matches.</p></section>
+   <section class="glass p-5"><h3 class="font-display font-bold text-xl">Innovative Solution: Smart Location Search</h3>
+    <p class="text-blue-200 text-sm mt-1">Develop a responsive search interface that displays relevant suggestions while users type and helps them distinguish between similar locations before selecting a result.</p>
+    <p class="font-semibold text-sm mt-2">The redesigned interface aims to:</p>
+    <ul class="list-disc list-inside text-blue-200 text-sm"><li>Reduce the time needed to identify the correct location.</li><li>Reduce incorrect selections among similarly named places.</li><li>Make search easier for first-time users.</li></ul></section>
+  </div>
+
+  <section class="glass p-5 overflow-x-auto"><h3 class="font-display font-bold text-lg mb-2">1. Three meaningful JavaScript events</h3>
+   <table class="w-full text-sm min-w-[30rem]"><thead class="text-left text-cyan-300"><tr><th class="py-1">Event</th><th>Where it is used</th><th>Function</th></tr></thead><tbody class="divide-y divide-blue-400/20">
+    <tr><td class="py-2 font-mono">input</td><td>Search field</td><td>Fetch and display suggestions as the user types.</td></tr>
+    <tr><td class="py-2 font-mono">submit</td><td>Search form</td><td>Validate the query and search for the selected or entered location.</td></tr>
+    <tr><td class="py-2 font-mono">click</td><td>Search result card</td><td>Select a location and display its details in the preview panel.</td></tr></tbody></table></section>
+
+  <div class="grid md:grid-cols-2 gap-5">
+   <section class="glass p-5"><h3 class="font-display font-bold text-lg mb-2">2. User input form with validation and feedback</h3><p class="text-sm text-blue-300 mb-1">The search form includes:</p>
+    <ul class="text-sm text-blue-200 space-y-1"><li>✅ A location search field.</li><li>✅ A clear-search button.</li><li>✅ Validation for empty or excessively long queries.</li><li>✅ A helpful message if the query is invalid.</li><li>✅ A visible indication of the selected location.</li><li>✅ A message if no matching location is found.</li></ul></section>
+   <section class="glass p-5"><h3 class="font-display font-bold text-lg mb-2">3. Fetch API and JSON data handling</h3>
+    <p class="text-sm text-blue-200">Uses the Fetch API to retrieve real location data from OpenStreetMap's geocoding service, <b>Nominatim</b>.</p>
+    <p class="text-sm text-blue-200 mt-2">Autocomplete suggestions use a small local JSON dataset (<code>js/data.js</code>) so results appear instantly while typing. On submit, <code>fetch()</code> retrieves real matching locations.</p></section>
+  </div>
+
+  <section class="pb-8"><h3 class="font-display font-bold text-xl mb-1">Loading, error and empty states</h3>
+   <p class="text-blue-300 text-sm mb-3">The results area is never left blank. Click a state to preview it in the side panel.</p>
+   <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+    <div class="glass p-4"><b>⏳ Loading</b><p class="text-blue-300 my-2">Spinner and “Searching for locations…”. Duplicate submissions are disabled.</p><button data-state="loading" class="btn2">Preview</button></div>
+    <div class="glass p-4"><b>📭 Empty</b><p class="text-blue-300 my-2">If the API returns an empty array: “No locations found. Try a different name or address.”</p><button data-state="empty" class="btn2">Preview</button></div>
+    <div class="glass p-4"><b>⚠️ Error</b><p class="text-blue-300 my-2">“We couldn't load locations. Check your connection and try again.” with a Retry button.</p><button data-state="error" class="btn2">Preview</button></div>
+    <div class="glass p-4"><b>✅ Success</b><p class="text-blue-300 my-2">Matching location cards with contextual details. Selecting one highlights it and updates the preview.</p><button data-state="success" class="btn2">Preview</button></div>
+   </div></section>
+ </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+</body></html>

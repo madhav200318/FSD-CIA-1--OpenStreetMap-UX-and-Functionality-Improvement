@@ -1,0 +1,24 @@
+body{background:#030b1f;color:#dbe7ff;font-family:'Manrope',sans-serif;overflow:hidden}
+h1,h2,h3,.font-display{font-family:'Sora',sans-serif}
+#map{position:fixed;inset:0;z-index:0;background:#0b2a6b}
+.leaflet-control-zoom a{background:#0b2a6b!important;color:#bfdbfe!important;border-color:#1e40af!important}
+.panel{background:linear-gradient(160deg,rgba(5,20,60,.94),rgba(3,11,31,.95) 60%);backdrop-filter:blur(14px);border-right:1px solid rgba(147,197,253,.2)}
+.deco{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:inherit}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:float 14s ease-in-out infinite alternate}
+.ring{position:absolute;border:1px solid rgba(125,211,252,.2);border-radius:42% 58% 63% 37%/45% 38% 62% 55%;animation:spin 50s linear infinite}
+@keyframes float{to{transform:translate(40px,-40px) scale(1.2)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fade{animation:f .35s ease}@keyframes f{from{opacity:0;transform:translateY(8px)}}
+.glass{background:rgba(15,40,100,.4);border:1px solid rgba(147,197,253,.18);border-radius:1rem}
+.chip{font-size:.7rem;padding:.15rem .6rem;border-radius:999px;background:rgba(59,130,246,.25);color:#bfdbfe}
+.chip.c{background:rgba(34,211,238,.2);color:#a5f3fc}
+.result{cursor:pointer;transition:.2s;text-align:left;width:100%}
+.result:hover{border-color:#60a5fa;transform:translateX(3px)}
+.result.sel{border-color:#22d3ee;box-shadow:0 0 0 2px rgba(34,211,238,.4);background:rgba(14,60,140,.6)}
+.sug-item.on,.sug-item:hover{background:rgba(59,130,246,.3)}
+.spinner{width:2.2rem;height:2.2rem;border:3px solid rgba(147,197,253,.25);border-top-color:#22d3ee;border-radius:50%;animation:spin .8s linear infinite}
+.btn{background:linear-gradient(90deg,#2563eb,#06b6d4);color:#fff;font-weight:700;border-radius:.8rem;padding:.6rem 1.1rem;transition:.2s}
+.btn:hover{filter:brightness(1.15)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn2{border:1px solid rgba(147,197,253,.4);border-radius:.7rem;padding:.4rem .8rem;font-size:.8rem;display:inline-block}.btn2:hover{background:rgba(59,130,246,.3)}
+.pin{width:18px;height:18px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#2563eb;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);transition:.2s}
+.pin.on{background:#06b6d4;width:28px;height:28px;box-shadow:0 0 0 6px rgba(34,211,238,.35),0 4px 12px rgba(0,0,0,.5)}
